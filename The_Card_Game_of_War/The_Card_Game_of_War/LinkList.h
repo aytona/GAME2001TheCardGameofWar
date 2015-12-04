@@ -181,7 +181,8 @@ public:
 
 		if (m_root != NULL)
 			m_root->m_previous = NULL;
-
+		else
+			m_lastNode = NULL;
 		delete temp;
 
 		m_size = (m_size == 0 ? m_size : m_size - 1);

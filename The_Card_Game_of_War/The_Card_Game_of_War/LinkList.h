@@ -24,10 +24,7 @@ class LinkNode
 	friend class LinkList<T>;
 
 private:
-	LinkNode() : m_next(0), m_previous(0)
-	{
-
-	}
+	LinkNode() : m_next(0), m_previous(0){}
 
 	T m_data;
 	LinkNode *m_next;
@@ -45,9 +42,7 @@ public:
 	}
 
 
-	~LinkIterator()
-	{
-	}
+	~LinkIterator(){}
 
 
 	void operator=(LinkNode<T> *node)

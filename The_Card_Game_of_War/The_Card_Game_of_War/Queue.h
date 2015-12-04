@@ -24,10 +24,7 @@ public:
 	}
 
 
-	~Queue()
-	{
-
-	}
+	~Queue(){}
 
 
 	void push(T val)

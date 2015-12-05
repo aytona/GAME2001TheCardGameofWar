@@ -54,7 +54,43 @@ private:
 	RankDeck deck;
 	Queue<int> _prizePool;
 	static const int numCards = 52;
-protected:
+
+private:
+	void Battle()
+	{
+		int _p1Card, _p2Card;
+		_p1Card = _player1.front();
+		_prizePool.push(_p1Card);
+		_p2Card = _player2.front();
+		_prizePool.push(_p2Card);
+
+		if (_p1Card > _p2Card)
+		{
+			while (!_prizePool.isEmpty())
+			{
+				_player1.push(_prizePool.front());
+			}
+		}
+		else
+		{
+			if (_p2Card > _p2Card)
+			{
+				while (!_prizePool.isEmpty())
+				{
+					_player2.push(_prizePool.front());
+				}
+			}
+			else
+			{
+				for (int i = 0; i < 3; i++)
+				{
+					_prizePool.pop(_player1.front());
+					_prizePool.pop(_player2.front());
+				}
+				Battle();
+			}
+		}
+	}
 
 public:
 	WarGame(int _maxNumBattles)
@@ -82,11 +118,67 @@ public:
 			if (deck.DealMoreCards())
 				_player2.push(deck.DealNextCard());
 		}
+		numBattles = 0;
+		while (!gameOver)
+		{
+			try
+			{
+				numBattles = numBattles + 1;
+				Battle();
+			}
+			catch (Queue exception)
+			{
+				gameOver = true;
+			}
+			if (numBattles == maxNumBattles)
+			{
+				gameOver = true;
+				gameOK = false;
+			}
+		}
+		return gameOK;
 	}
 };
 
 int main()
 {
+	WarGame game;
+	int numGames;
+	int maxNumBattles;
+	int numDiscont = 0;
+	int numCompleted = 0;
+	int totBattles = 0;
+
+	cout << "How many games should be simluated? ";
+	cin >> numGames;
+	cout << "What is the maximum number of battles per game? ";
+	cin >> maxNumBattles;
 	
+	game = new WarGame(maxNumBattles);
+	for (int i = 0; i < numGames; i++)
+	{
+		if (game.Play())
+		{
+			numCompleted = numCompleted + 1;
+			totBattles = totBattles + game.GetNumBattles();
+		}
+		else
+		{
+			numDiscont = numDiscont + 1;
+		}
+	}
+
+	cout << "Number of Games Simulated: " << numGames << endl;
+	cout << "Number of Discontinued Games: " << numDiscont << endl;
+	cout << "Number of Completed Games: " << numCompleted << endl;
+
+	if (numCompleted > 0)
+	{
+		cout << "In the completed games" << endl;
+		cout << "\tTotal Number of Battles " << totBattles << endl;
+		cout << "\tAverage Number of Battles " << totBattles / numCompleted << endl;
+	}
+
+	cout << "Program completed." << endl;
 	return 0;
 }

@@ -1,6 +1,6 @@
 #include <iostream>
 #include <stdlib.h>
-#include "Queue.h"
+#include <queue>
 using namespace std;
 
 class RankDeck
@@ -13,6 +13,7 @@ protected:
 	int currentCard = 0;
 	
 public:
+	// Constructor
 	RankDeck()
 	{
 		for (int i = 0; i < numCards; i++)
@@ -47,45 +48,44 @@ public:
 class WarGame
 {
 private:
-	Queue<int> _player1;
-	Queue<int> _player2;
+	queue<int>* _player1 = new queue<int>();
+	queue<int>* _player2 = new queue<int>();
 	int maxNumBattles;
 	int numBattles = 0;
-	RankDeck deck;
-	Queue<int> _prizePool;
-	static const int numCards = 52;
+	RankDeck* deck;
+	queue<int>* _prizePool = new queue<int>();
 
 private:
 	void Battle()
 	{
 		int _p1Card, _p2Card;
-		_p1Card = _player1.front();
-		_prizePool.push(_p1Card);
-		_p2Card = _player2.front();
-		_prizePool.push(_p2Card);
+		_p1Card = _player1->front();
+		_prizePool->push(_p1Card);
+		_p2Card = _player2->front();
+		_prizePool->push(_p2Card);
 
 		if (_p1Card > _p2Card)
 		{
-			while (!_prizePool.isEmpty())
+			while (!_prizePool->empty())
 			{
-				_player1.push(_prizePool.front());
+				_player1->push(_prizePool->front());
 			}
 		}
 		else
 		{
 			if (_p2Card > _p2Card)
 			{
-				while (!_prizePool.isEmpty())
+				while (!_prizePool->empty())
 				{
-					_player2.push(_prizePool.front());
+					_player2->push(_prizePool->front());
 				}
 			}
 			else
 			{
 				for (int i = 0; i < 3; i++)
 				{
-					_prizePool.pop(_player1.front());
-					_prizePool.pop(_player2.front());
+					_prizePool->push(_player1->front());
+					_prizePool->push(_player2->front());
 				}
 				Battle();
 			}
@@ -106,30 +106,29 @@ public:
 
 	bool Play()
 	{
-		_player1 = new Queue<int>(numCards);
-		_player2 = new Queue<int>(numCards);
-		_prizePool = new Queue<int>(numCards);
+		_player1 = new queue<int>();
+		_player2 = new queue<int>();
+		_prizePool = new queue<int>();
 		bool gameOver = false;
 		bool gameOK = true;
-		deck.Shuffle();
-		while (deck.DealMoreCards())
+		deck->Shuffle();
+		while (deck->DealMoreCards())
 		{
-			_player1.push(deck.DealNextCard());
-			if (deck.DealMoreCards())
-				_player2.push(deck.DealNextCard());
+			_player1->push(deck->DealNextCard());
+			if (deck->DealMoreCards())
+				_player2->push(deck->DealNextCard());
 		}
 		numBattles = 0;
 		while (!gameOver)
 		{
-			try
-			{
+			try {
 				numBattles = numBattles + 1;
 				Battle();
 			}
-			catch (Queue exception)
-			{
+			catch (...) {
 				gameOver = true;
 			}
+
 			if (numBattles == maxNumBattles)
 			{
 				gameOver = true;
@@ -142,7 +141,7 @@ public:
 
 int main()
 {
-	WarGame game;
+	WarGame* game;
 	int numGames;
 	int maxNumBattles;
 	int numDiscont = 0;
@@ -157,10 +156,10 @@ int main()
 	game = new WarGame(maxNumBattles);
 	for (int i = 0; i < numGames; i++)
 	{
-		if (game.Play())
+		if (game->Play())
 		{
 			numCompleted = numCompleted + 1;
-			totBattles = totBattles + game.GetNumBattles();
+			totBattles = totBattles + game->GetNumBattles();
 		}
 		else
 		{
@@ -180,5 +179,6 @@ int main()
 	}
 
 	cout << "Program completed." << endl;
+	system("PAUSE");
 	return 0;
 }

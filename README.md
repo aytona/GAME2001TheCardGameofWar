@@ -11,7 +11,7 @@ In the completed games:
 + Average number of battles:
 
 ### Purpose
-Link Lists, and Queues practice. Assignment for Data Structures class.
+Queues practice. Assignment for Data Structures class.
 
 ### Installation
 + Fork repository
